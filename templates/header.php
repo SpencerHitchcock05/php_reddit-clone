@@ -19,13 +19,13 @@ session_start();
             <img id="logo" src="img/Logo.png">
         </a>
         <div class="d-flex">
-            <?php if (!isset($_SESSION["user"])) {?>
+            <?php if (!isset($_SESSION["user"])):?>
                 <p class="mx-3">Hi, <?php /*echo $_SESSION["user"]*/ ?></p>
                 <div class="d-flex">
                     <a class="mx-3" href="messages.php">Messages</a>
                     <a class="mx-3" href="new-post.php">Create New Post</a>
                     <a class="mx-3" href="includes/logout.php">Logout</a>
                 </div>
-            <?php }?>
+            <?php endif;?>
         </div>
     </nav>

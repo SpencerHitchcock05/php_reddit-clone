@@ -20,12 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         array_push($resultArray, $row);
     }
 
-    $data = array();
 
     for ($i = 0; $i < sizeof($resultArray); $i++) {
         $username = $db->query("SELECT username FROM users WHERE id = {$resultArray[$i]['user_id']}");
         //echo $username;
-        $resultArray[$i]["username"] = $username->fetch_assoc();
+        $resultArray[$i]["username"] = $username->fetch_assoc()["username"];
     }
 
     echo json_encode($resultArray);

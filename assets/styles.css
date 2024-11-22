@@ -15,13 +15,43 @@ nav {
     width:10vw;
 }
 
+#login {
+    height: 50%;
+}
+
+#spinnythingy {
+    width:50px;
+    height:50px;
+    background-color: red;
+    margin-top: 30%;
+
+    animation: spinny 2s ease  infinite;
+}
+
 #post-container {
-    height:33vh;
-    background-color: aqua;
+    box-sizing: border-box;
+
 }
 
 #posts {
     width: 60vw;
-    background-color: red;
     height:100%;
+    box-sizing: border-box;
+}
+
+.post {
+    margin: 10px;
+    padding: 3%;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    width: 100%;
+}
+
+@keyframes spinny {
+    0% {transform: translate(-50px, -50px); background-color: red;}
+    25% {transform: translate(-50px, 50px); background-color: blue;}
+    50% {transform: translate(50px, 50px); background-color: #00ff00;}
+    75% {transform: translate(50px, -50px); background-color: yellow;}
+    100% {transform: translate(-50px, -50px); background-color: red;}
+
 }
