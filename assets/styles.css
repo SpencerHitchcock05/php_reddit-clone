@@ -1,1 +1,27 @@
 /* Stylesheet for Dalhousie Forum */
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    height: 12vh;
+}
+
+#logo {
+    width:10vw;
+}
+
+#post-container {
+    height:33vh;
+    background-color: aqua;
+}
+
+#posts {
+    width: 60vw;
+    background-color: red;
+    height:100%;
+}

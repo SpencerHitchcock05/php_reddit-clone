@@ -11,7 +11,7 @@ CREATE TABLE users (
 );
 
 -- Posts Table
-CREATE TABLE posts (
+CREATE TABLE IF NOT EXISTS posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE posts (
 );
 
 -- Messages Table
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT NOT NULL,
     receiver_id INT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE messages (
 );
 
 -- Likes Table
-CREATE TABLE likes (
+CREATE TABLE IF NOT EXISTS likes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE likes (
 );
 
 -- Upvotes Table
-CREATE TABLE upvotes (
+CREATE TABLE IF NOT EXISTS upvotes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
