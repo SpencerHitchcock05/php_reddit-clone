@@ -7,7 +7,7 @@
 <main>
 
     <?php if (!isset($_SESSION["username"])): ?>  
-        <div id="login" class="d-flex justify-content-center align-items-center">
+        <div id="login" class="d-flex justify-content-center align-items-center h-50">
             <form id="login-form" action="includes/login.php" class="d-flex flex-column" method="POST">
                 <label id="username-input">Username:</label>
                 <input id="username-input" name="username" type="text">
@@ -15,6 +15,20 @@
                 <input id="password-input" name="password" type="password">
                 <input name="submit" type="submit" class="btn btn-primary my-3">
                 <?php if (isset($_GET["err"])) { ?><p class="text-danger">Incorrect username or password</p><?php } ?>
+                <button id="new-account-btn" class="text-primary text-decoration-underline">Create a new Account!</button>
+            </form>
+        </div>
+
+        <div id="new-account" class="d-none justify-content-center align-items-center h-50">
+            <form id="new-account-form" action="includes/new_account.php" class="d-flex flex-column" method="POST">
+                <label id="username-input">Username:</label>
+                <input id="username-input" name="username" type="text">
+                <label for="password-input">Password:</label>
+                <input id="password-input" name="password" type="password">
+                <label for="confirm-input">Confirm Password:</label>
+                <input id="confirm-input" name="confirm" type="password">
+                <input name="submit" type="submit" class="btn btn-primary my-3">
+                <button id="login-btn" class="text-primary text-decoration-underline">Login!</button>
             </form>
         </div>
     <?php else: ?>
@@ -66,22 +80,29 @@
         }
     })
     .catch(err => {console.log(err)})
-/*
-    document.getElementById("login-form").addEventListener("submit", (e) => {
 
-        const username = document.getElementById("username-input");
-        const password = document.getElementById("password-input");
-
-        if (username.value.match(/\w+/) == null) {
-            e.preventDefault()
-            return
-        }
-        
-        if (!password.value.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*\W).{8,}$/)) {
-            e.preventDefault();
-        }
-
+    document.getElementById("new-account-btn").addEventListener("click", (e) => {
         e.preventDefault()
+        
+        const newAccount = document.getElementById("new-account");
+        const loginBtn = document.getElementById("login");
 
-    }) */
+        newAccount.classList.remove("d-none");
+        newAccount.classList.add("d-flex");
+        login.classList.remove("d-flex");
+        login.classList.add("d-none");
+    })
+
+    document.getElementById("login-btn").addEventListener("click", (e) => {
+        e.preventDefault()
+        
+        const newAccount = document.getElementById("new-account");
+        const loginBtn = document.getElementById("login");
+
+        newAccount.classList.remove("d-flex");
+        newAccount.classList.add("d-none");
+        login.classList.remove("d-none");
+        login.classList.add("d-flex");
+    })
+
 </script>

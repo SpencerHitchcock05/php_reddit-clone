@@ -19,8 +19,8 @@ session_start();
             <img id="logo" src="img/Logo.png">
         </a>
         <div class="d-flex">
-            <?php if (!isset($_SESSION["user"])):?>
-                <p class="mx-3">Hi, <?php /*echo $_SESSION["user"]*/ ?></p>
+            <?php if (isset($_SESSION["username"])):?>
+                <p class="mx-3">Hi, <?php echo $_SESSION["username"] ?></p>
                 <div class="d-flex">
                     <a class="mx-3" href="messages.php">Messages</a>
                     <a class="mx-3" href="new-post.php">Create New Post</a>

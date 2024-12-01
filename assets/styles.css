@@ -19,6 +19,16 @@ nav {
     height: 50%;
 }
 
+#new-account-btn {
+    background: none;
+    border:none;
+}
+
+#login-btn {
+    background: none;
+    border:none;
+}
+
 #spinnythingy {
     width:50px;
     height:50px;
