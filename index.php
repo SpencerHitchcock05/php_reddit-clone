@@ -7,6 +7,8 @@
 <main>
 
     <?php if (!isset($_SESSION["username"])): ?>  
+
+        <!-- both login and create account together only one is shown -->
         <div id="login" class="d-flex justify-content-center align-items-center h-50">
             <form id="login-form" action="includes/login.php" class="d-flex flex-column" method="POST">
                 <label id="username-input">Username:</label>
@@ -33,6 +35,7 @@
         </div>
     <?php else: ?>
 
+        <!-- where all the posts go -->
     <div id="post-container" class="d-flex justify-content-center">
         <div id="posts" class="d-flex justify-content-center flex-column align-items-center">
             <div id="spinnythingy"></div>
@@ -44,42 +47,183 @@
 
 
 <script>
-    fetch("api/posts.php")
-    .then(resp => resp.json())
-    .then(data => {
 
-        console.log(data)
 
-        const posts = document.getElementById("posts");
+   
 
-        for (let i = 0; i < data.length; i++) {
-            const post = document.createElement("div");
-            post.classList.add("post");
+//get all of the posts updated asynchronously
+    function getPosts() {
 
-            const user_name = document.createElement("p");
-            user_name.innerText = data[i].username + " " + data[i].created_at;
-            post.appendChild(user_name);
-            user_name.classList.add("m-0")
+        fetch("api/posts.php")
+        .then(resp => resp.json())
+        .then(data => {
 
-            const title = document.createElement("h3");
-            title.innerText = data[i].title;
-            post.appendChild(title);
+            console.log(data)
 
-            const content = document.createElement("p");
-            content.innerText = data[i].content;
-            post.appendChild(content);
+            const posts = document.getElementById("posts");
 
-            const upvotes = document.createElement("p");
-            upvotes.innerHTML = "&uarr; " + Math.round(Math.random() * 999);
-            post.appendChild(upvotes);
+            posts.innerHTML = "";
 
-            posts.appendChild(post);
+            for (let i = 0; i < data.length; i++) {
+                const post = document.createElement("div");
+                post.classList.add("post");
+                post.id = data[i].id
 
-            const spinnythingy = document.getElementById("spinnythingy");
-            spinnythingy.classList.add("d-none");
+                const editBtn = document.createElement("button")
+                editBtn.classList.add("edit-btn")
+                editBtn.classList.add("mx-2")
+                editBtn.innerText = "Edit"
+
+                editBtn.addEventListener("click", editButton)
+
+                const deleteBtn = document.createElement("button")
+                deleteBtn.classList.add("delete-btn")
+                deleteBtn.classList.add("mx-2")
+                deleteBtn.innerText = "Delete"
+
+                deleteBtn.addEventListener("click", deleteButton)
+
+                const username = <?php if (isset($_SESSION["username"])) {echo "'" . $_SESSION["username"] . "'";}?>
+
+                console.log(username)
+
+                if (data[i].username == username) {
+                    post.appendChild(editBtn)
+                    post.appendChild(deleteBtn)
+
+                    const editDiv = document.createElement("div")
+                    editDiv.classList.add("d-none")
+                    editDiv.classList.add("flex-column")
+                    editDiv.classList.add("m-3")
+                    editDiv.id = `edit-${data[i].id}`
+                    
+
+                    const editTitle =document.createElement("input")
+                    editTitle.type = "text"
+                    editTitle.value = data[i].title
+                    const editText = document.createElement("textarea")
+                    editText.value = data[i].content
+
+                    const submitEdit =document.createElement("button");
+                    submitEdit.innerText = "Submit Edit"
+                    submitEdit.classList.add("btn")
+                    submitEdit.classList.add("btn-primary")
+                    submitEdit.addEventListener("click", () => {submitEditButton(data[i].id, editTitle.value, editText.value)})
+
+                    editDiv.appendChild(editTitle)
+                    editDiv.appendChild(editText)
+                    editDiv.appendChild(submitEdit)
+
+                    post.appendChild(editDiv)
+                }
+
+
+                const user_name = document.createElement("p");
+                user_name.innerText = data[i].username + " " + data[i].created_at;
+                post.appendChild(user_name);
+                user_name.classList.add("m-0")
+
+                const title = document.createElement("h3");
+                title.innerText = data[i].title;
+                post.appendChild(title);
+
+                const content = document.createElement("p");
+                content.innerText = data[i].content;
+                post.appendChild(content);
+
+                const upvotes = document.createElement("p");
+                upvotes.innerHTML = "&uarr; " + Math.round(Math.random() * 999);
+                post.appendChild(upvotes);
+
+                posts.prepend(post);
+
+                /*
+                const spinnythingy = document.getElementById("spinnythingy");
+                spinnythingy.classList.add("d-none"); */
+            }
+        })
+        .catch(err => {console.log(err)})
+
+    }
+
+    getPosts()
+
+    let interval = setInterval(() => {getPosts()}, 5000);
+
+    function submitEditButton(id, title, content) {
+        console.log(id + title + content)
+
+        fetch("api/posts.php", {
+            headers: {"Content-Type": "application/json"},
+            method: "PUT",
+            body: JSON.stringify({id: id, title: title, content: content})
+        })
+        .then(resp => {
+            if (!resp.ok) {
+                alert("edited text cannot be empty")
+            }
+        })
+        .then(data => {console.log(data)})
+        .catch(err=>{console.log(err)})
+
+
+        getPosts()
+        interval = setInterval(() => {getPosts()}, 5000)
+    }
+
+    //when you hit edit button add or remove the form for editing
+
+    function editButton(e) {
+        e.preventDefault()
+
+        clearInterval(interval);
+
+
+        const editDiv = document.getElementById(`edit-${e.srcElement.parentElement.id}`) 
+
+        if (editDiv.classList.contains("d-none")) {
+            editDiv.classList.add("d-flex")
+            editDiv.classList.remove("d-none")
+        } else {
+            editDiv.classList.add("d-none")
+            editDiv.classList.remove("d-flex")
         }
-    })
-    .catch(err => {console.log(err)})
+
+        
+
+        console.log("edit")
+    }
+
+//asynchrously delete posts
+
+    function deleteButton(e) {
+        e.preventDefault()
+
+        const btn = e.srcElement;
+
+        id = btn.parentElement.id
+    
+        fetch("api/posts.php", {
+            headers: {"Content-Type": "application/json"},
+            method: "DELETE",
+            body: JSON.stringify({id: id})
+        }) 
+        .then(resp => resp.json())
+        .then(data => {
+            if (data.success) {
+                console.log("deleted")
+            } else {
+                console.log("uo oh")
+            }
+
+            getPosts()
+        })
+        .catch(err => {console.log(err)})
+
+    }
+
+
+//code for switching login and createaccount
 
     document.getElementById("new-account-btn").addEventListener("click", (e) => {
         e.preventDefault()
